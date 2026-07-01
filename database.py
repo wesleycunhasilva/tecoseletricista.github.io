@@ -1,7 +1,10 @@
+import os
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).resolve().parent / 'tecos.db'
+DB_PATH = Path(os.environ.get('TECOS_DB_PATH', str(Path(__file__).resolve().parent / 'tecos.db')))
+if DB_PATH.parent != Path('.') and not DB_PATH.parent.exists():
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
 def get_connection():
