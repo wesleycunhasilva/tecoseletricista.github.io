@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Ordens Pendentes</h5>
+        <p class="display-6">{{ pendentes }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title">Faturamento do mês</h5>
+            <p class="display-6">R$ {{ '%.2f'|format(faturamento) }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title">Lucro Bruto Mensal</h5>
+            <p class="display-6">R$ {{ '%.2f'|format(lucro_bruto_mensal) }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title">Previsão de Lucro Bruto Anual</h5>
+            <p class="display-6">R$ {{ '%.2f'|format(lucro_bruto_anual) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Faturamento e Lucro por Mês</h5>
+        <canvas id="financialChart" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Status das Ordens</h5>
+        <canvas id="statusChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="card-title mb-0">Últimas Ordens Abertas</h5>
+      <div>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">Todos</a>
+        <a href="{{ url_for('ordens_abertas') }}" class="btn btn-outline-warning btn-sm">Abertas</a>
+        <a href="{{ url_for('index', status='Concluído') }}" class="btn btn-outline-success btn-sm">Concluídas</a>
+      </div>
+    </div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ordem in ordens %}
+        <tr>
+          <td>{{ ordem.id }}</td>
+          <td>{{ ordem.cliente_nome }}</td>
+          <td>{{ ordem.tipo_servico }}</td>
+          <td><span class="badge bg-info text-dark">{{ ordem.status }}</span></td>
+          <td>R$ {{ '%.2f'|format(ordem.valor_total) }}</td>
+          <td><a href="{{ url_for('detalhe_ordem', ordem_id=ordem.id) }}" class="btn btn-sm btn-primary">Detalhes</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center">Nenhuma ordem cadastrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const financialCtx = document.getElementById('financialChart');
+  new Chart(financialCtx, {
+    type: 'line',
+    data: {
+      labels: {{ meses|tojson }},
+      datasets: [
+        {
+          label: 'Faturamento',
+          data: {{ valores_mensais|tojson }},
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.15)',
+          tension: 0.3,
+          fill: true
+        },
+        {
+          label: 'Lucro',
+          data: {{ lucros_mensais|tojson }},
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16, 185, 129, 0.15)',
+          tension: 0.3,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } }
+    }
+  });
+
+  const statusCtx = document.getElementById('statusChart');
+  new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys({{ status_counts|tojson }}),
+      datasets: [{
+        data: Object.values({{ status_counts|tojson }}),
+        backgroundColor: ['#f59e0b', '#10b981', '#3b82f6']
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+{% endblock %}

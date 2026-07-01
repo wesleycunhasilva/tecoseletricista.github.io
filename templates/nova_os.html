@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="card-title mb-0">Nova Ordem de Serviço</h5>
+      <span class="badge bg-primary-subtle text-primary-emphasis">Fluxo profissional</span>
+    </div>
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Cliente</label>
+          <select class="form-select" name="cliente_id" required>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Tipo de Serviço</label>
+          <select class="form-select" name="tipo_servico" required>
+            <option>Residencial</option>
+            <option>Comercial</option>
+            <option>Industrial</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Descrição do Problema</label>
+          <textarea class="form-control" name="descricao_problema" rows="4" required placeholder="Descreva a falha, local, necessidade e observações técnicas..."></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Valor Material</label>
+          <input type="number" step="0.01" class="form-control" name="valor_material" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Status</label>
+          <select class="form-select" name="status" required>
+            <option>Pendente</option>
+            <option>Em Andamento</option>
+            <option>Concluído</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Valor da Mão de Obra</label>
+          <input type="number" step="0.01" class="form-control" name="valor_mao_de_obra_manual" placeholder="Opcional: informe manualmente o valor da mão de obra">
+          <small class="text-muted">Se deixar vazio, o sistema usa o valor calculado pelos serviços escolhidos.</small>
+        </div>
+        <div class="col-12">
+          <div class="border rounded p-3 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label class="form-label mb-0">Serviços e Quantidades</label>
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="addServiceRow()">+ Adicionar serviço</button>
+            </div>
+            <div id="service-rows">
+              <div class="row g-2 mb-2 service-row">
+                <div class="col-md-8">
+                  <select class="form-select" name="servico">
+                    {% for servico in servicos %}
+                    <option value="{{ servico.nome }}">{{ servico.nome }} - R$ {{ '%.2f'|format(servico.valor) }} {{ servico.unidade }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <input type="number" min="1" class="form-control" name="quantidade" value="1">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-info mt-3">
+        <strong>Resumo:</strong> a mão de obra será calculada automaticamente a partir dos serviços e quantidades informados.
+      </div>
+      <button class="btn btn-primary mt-3">Salvar Ordem</button>
+    </form>
+  </div>
+</div>
+<script>
+function addServiceRow() {
+  const container = document.getElementById('service-rows');
+  const row = document.createElement('div');
+  row.className = 'row g-2 mb-2 service-row';
+  row.innerHTML = `
+    <div class="col-md-8">
+      <select class="form-select" name="servico">
+        {% for servico in servicos %}
+        <option value="{{ servico.nome }}">{{ servico.nome }} - R$ {{ '%.2f'|format(servico.valor) }} {{ servico.unidade }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <input type="number" min="1" class="form-control" name="quantidade" value="1">
+    </div>
+  `;
+  container.appendChild(row);
+}
+</script>
+{% endblock %}

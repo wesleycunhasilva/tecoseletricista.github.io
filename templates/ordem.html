@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <h5 class="card-title">Detalhes da Ordem de Serviço</h5>
+    {% if ordem %}
+    <p><strong>ID:</strong> {{ ordem.id }}</p>
+    <p><strong>Cliente:</strong> {{ cliente.nome if cliente else 'Não informado' }}</p>
+    <p><strong>Descrição:</strong> {{ ordem.descricao_problema }}</p>
+    <p><strong>Tipo:</strong> {{ ordem.tipo_servico }}</p>
+    <p><strong>Status:</strong> {{ ordem.status }}</p>
+    <p><strong>Valor Material:</strong> R$ {{ '%.2f'|format(ordem.valor_material) }}</p>
+    <p><strong>Valor Mão de Obra:</strong> R$ {{ '%.2f'|format(ordem.valor_mao_de_obra) }}</p>
+    <p><strong>Valor Total:</strong> R$ {{ '%.2f'|format(ordem.valor_total) }}</p>
+    <h6 class="mt-3">Serviços da Ordem</h6>
+    <ul>
+      {% for item in itens %}
+      <li>{{ item.servico }} — Quantidade: {{ item.quantidade }} — R$ {{ '%.2f'|format(item.valor_total) }}</li>
+      {% else %}
+      <li>Nenhum serviço registrado.</li>
+      {% endfor %}
+    </ul>
+    <div class="mt-3">
+      <a href="{{ url_for('editar_ordem', ordem_id=ordem.id) }}" class="btn btn-primary">Editar</a>
+      <a href="{{ url_for('pdf_ordem', ordem_id=ordem.id) }}" class="btn btn-outline-secondary">Imprimir OS em PDF</a>
+      <a href="{{ url_for('nota_fiscal', ordem_id=ordem.id) }}" class="btn btn-outline-success">Emitir Nota Fiscal</a>
+      <form action="{{ url_for('excluir_ordem_route', ordem_id=ordem.id) }}" method="post" class="d-inline">
+        <button class="btn btn-danger" type="submit">Excluir</button>
+      </form>
+    </div>
+    <hr>
+    <button class="btn btn-warning">Análise de Risco / Sugestão da IA</button>
+    <div class="alert alert-warning mt-3">
+      {{ alerta }}
+    </div>
+    {% else %}
+    <p>Ordem não encontrada.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
