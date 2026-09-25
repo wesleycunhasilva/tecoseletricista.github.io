@@ -1,0 +1,151 @@
+body {
+  background: linear-gradient(135deg, #f7faff 0%, #eef4ff 100%);
+  color: #213448;
+  font-size: 16px;
+}
+
+main.container {
+  max-width: 1200px;
+}
+
+.navbar-dark, .app-navbar {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.app-brand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.14);
+}
+
+.app-nav-list .nav-link {
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  margin: 0.15rem 0;
+}
+
+.app-nav-list .nav-link:hover,
+.app-nav-list .nav-link:focus {
+  background: rgba(255,255,255,0.12);
+}
+
+.card {
+  border-radius: 20px;
+  border: 1px solid #dfe8f5;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+  overflow: hidden;
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f5f9ff 100%);
+}
+
+.brand-badge {
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  color: white;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.badge {
+  padding: 0.5rem 0.75rem;
+}
+
+.form-control, .form-select {
+  border-radius: 12px;
+}
+
+.alert-info {
+  background-color: #e8f2ff;
+  border-color: #cfe0ff;
+  color: #1d4ed8;
+}
+
+.table thead {
+  background-color: #f1f5f9;
+}
+
+.table-responsive {
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .navbar-brand {
+    font-size: 1rem;
+  }
+
+  .display-6 {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 0.35rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .table {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    font-size: 15px;
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .hero-card {
+    padding: 1rem !important;
+  }
+
+  .navbar-nav .nav-link {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .app-nav-list {
+    padding-top: 0.5rem;
+  }
+
+  .app-nav-list .nav-item {
+    width: 100%;
+  }
+
+  .app-nav-list .nav-link {
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+  }
+}

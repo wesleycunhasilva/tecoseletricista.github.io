@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h4 class="mb-1">Ordens Abertas</h4>
+        <p class="text-muted mb-0">Listagem das ordens ainda pendentes.</p>
+      </div>
+      <a href="{{ url_for('nova_os') }}" class="btn btn-primary">Nova OS</a>
+    </div>
+
+    <form class="row g-3 mb-4" method="get">
+      <div class="col-md-4">
+        <label class="form-label">Cliente</label>
+        <select name="cliente_id" class="form-select">
+          <option value="">Todos</option>
+          {% for cliente in clientes %}
+          <option value="{{ cliente.id }}" {% if cliente_id and cliente.id == cliente_id|int %}selected{% endif %}>{{ cliente.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Data inicial</label>
+        <input type="date" name="data_inicio" class="form-control" value="{{ data_inicio or '' }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Data final</label>
+        <input type="date" name="data_fim" class="form-control" value="{{ data_fim or '' }}">
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-outline-primary w-100">Filtrar</button>
+      </div>
+    </form>
+
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ordem in ordens %}
+        <tr>
+          <td>{{ ordem.id }}</td>
+          <td>{{ ordem.cliente_nome }}</td>
+          <td>{{ ordem.tipo_servico }}</td>
+          <td><span class="badge bg-warning text-dark">{{ ordem.status }}</span></td>
+          <td>R$ {{ '%.2f'|format(ordem.valor_total) }}</td>
+          <td><a href="{{ url_for('detalhe_ordem', ordem_id=ordem.id) }}" class="btn btn-sm btn-outline-primary">Detalhes</a></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted">Nenhuma ordem aberta no momento.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
